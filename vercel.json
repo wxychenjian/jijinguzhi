@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/fund/:match*",
+      "destination": "http://fundgz.1234567.com.cn/js/:match*"
+    }
+  ]
+}
