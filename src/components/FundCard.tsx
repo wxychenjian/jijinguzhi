@@ -9,9 +9,9 @@ interface FundCardProps {
 }
 
 export function FundCard({ fund, onRemove }: FundCardProps) {
-  // Requirement: Green (#10B981) for Up, Red (#EF4444) for Down
+  // Requirement: Red (#EF4444) for Up, Green (#10B981) for Down (Chinese stock market convention)
   const isPositive = fund.change >= 0;
-  const colorClass = isPositive ? 'text-green-500' : 'text-red-500';
+  const colorClass = isPositive ? 'text-red-500' : 'text-green-500';
 
   return (
     <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-800 p-4 hover:shadow-md transition-shadow">
