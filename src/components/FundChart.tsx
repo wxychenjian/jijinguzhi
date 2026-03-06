@@ -6,7 +6,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Brush
 } from 'recharts';
 import { FundHistoryItem } from '@/types';
 import { format, parseISO, startOfWeek, startOfMonth } from 'date-fns';
@@ -101,7 +102,7 @@ export default function FundChart({ data, granularity }: FundChartProps) {
             top: 10,
             right: 10,
             left: 0,
-            bottom: 0,
+            bottom: 40,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
@@ -130,6 +131,13 @@ export default function FundChart({ data, granularity }: FundChartProps) {
             dot={false}
             activeDot={{ r: 4 }} 
             isAnimationActive={true}
+          />
+          <Brush 
+            dataKey="date" 
+            height={30} 
+            stroke="#10b981"
+            fill="var(--brush-fill, #f3f4f6)"
+            tickFormatter={(date) => format(parseISO(date), 'MM-dd')}
           />
         </LineChart>
       </ResponsiveContainer>
