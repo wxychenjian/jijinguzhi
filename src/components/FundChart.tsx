@@ -64,6 +64,34 @@ export default function FundChart({ data, granularity }: FundChartProps) {
   const domainMin = minVal * 0.99; // Tighter bounds
   const domainMax = maxVal * 1.01;
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload as FundHistoryItem;
+      const isPositive = data.changePercent >= 0;
+      
+      return (
+        <div className="bg-white dark:bg-zinc-800 p-3 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-2">
+            {label ? format(parseISO(label), 'yyyy年MM月dd日') : ''}
+          </p>
+          <div className="flex justify-between items-center gap-4 text-sm">
+            <span className="text-zinc-600 dark:text-zinc-300">净值</span>
+            <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+              {data.value.toFixed(4)}
+            </span>
+          </div>
+          <div className="flex justify-between items-center gap-4 text-sm mt-1">
+            <span className="text-zinc-600 dark:text-zinc-300">涨跌幅</span>
+            <span className={`font-semibold ${isPositive ? 'text-red-500' : 'text-green-500'}`}>
+              {isPositive ? '+' : ''}{data.changePercent}%
+            </span>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="w-full h-[400px]">
       <ResponsiveContainer width="100%" height="100%">
@@ -93,11 +121,7 @@ export default function FundChart({ data, granularity }: FundChartProps) {
             axisLine={false}
             tickLine={false}
           />
-          <Tooltip 
-            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-            labelFormatter={(label) => format(parseISO(label), 'yyyy年MM月dd日')}
-            formatter={(value: number) => [value.toFixed(4), '净值']}
-          />
+          <Tooltip content={<CustomTooltip />} />
           <Line 
             type="monotone" 
             dataKey="value" 
