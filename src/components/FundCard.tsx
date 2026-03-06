@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Fund } from '@/types';
 import { cn } from '@/utils/cn';
 import { Trash2 } from 'lucide-react';
@@ -9,19 +10,27 @@ interface FundCardProps {
 }
 
 export function FundCard({ fund, onRemove }: FundCardProps) {
+  const navigate = useNavigate();
+  
   // Requirement: Red (#EF4444) for Up, Green (#10B981) for Down (Chinese stock market convention)
   const isPositive = fund.change >= 0;
   const colorClass = isPositive ? 'text-red-500' : 'text-green-500';
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-800 p-4 hover:shadow-md transition-shadow">
+    <div 
+      onClick={() => navigate(`/fund/${fund.code}`)}
+      className="bg-white dark:bg-zinc-900 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-800 p-4 hover:shadow-md transition-shadow cursor-pointer"
+    >
       <div className="flex justify-between items-start">
         <div>
-          <h3 className="font-semibold text-lg text-zinc-900 dark:text-zinc-100">{fund.name}</h3>
+          <h3 className="font-semibold text-lg text-zinc-900 dark:text-zinc-100 hover:underline">{fund.name}</h3>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{fund.code}</p>
         </div>
         <button
-          onClick={() => onRemove(fund.code)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(fund.code);
+          }}
           className="text-zinc-400 hover:text-red-500 transition-colors p-1"
           title="删除基金"
         >

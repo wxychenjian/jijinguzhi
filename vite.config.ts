@@ -15,6 +15,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/fund/, ''),
       },
+      '/api/history': {
+        target: 'http://fund.eastmoney.com/pingzhongdata',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/history/, ''),
+      },
     },
   },
   preview: {
@@ -23,6 +28,11 @@ export default defineConfig({
         target: 'http://fundgz.1234567.com.cn/js',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/fund/, ''),
+      },
+      '/api/history': {
+        target: 'http://fund.eastmoney.com/pingzhongdata',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/history/, ''),
       },
     },
   },

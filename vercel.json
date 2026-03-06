@@ -3,6 +3,10 @@
     {
       "source": "/api/fund/:match*",
       "destination": "http://fundgz.1234567.com.cn/js/:match*"
+    },
+    {
+      "source": "/api/history/:match*",
+      "destination": "http://fund.eastmoney.com/pingzhongdata/:match*"
     }
   ]
 }

@@ -21,3 +21,15 @@ export interface AppState {
   refreshInterval: number; // 毫秒
   lastRefreshTime: string;
 }
+
+export interface FundHistoryItem {
+  date: string;
+  value: number;
+  changePercent: number;
+}
+
+export interface FundHistory {
+  code: string;
+  name: string;
+  data: FundHistoryItem[];
+}

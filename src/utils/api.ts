@@ -1,4 +1,4 @@
-import { Fund } from '@/types';
+import { Fund, FundHistory, FundHistoryItem } from '@/types';
 
 export async function getFundValue(fundCode: string): Promise<Fund> {
   try {
@@ -42,6 +42,47 @@ export async function getFundValue(fundCode: string): Promise<Fund> {
     };
   } catch (error) {
     console.error(`Failed to fetch fund ${fundCode}:`, error);
+    throw error;
+  }
+}
+
+export async function getFundHistory(fundCode: string): Promise<FundHistory> {
+  try {
+    const response = await fetch(`/api/history/${fundCode}.js?rt=${Date.now()}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const text = await response.text();
+
+    // The API returns JavaScript code that defines multiple variables
+    // We need Data_netWorthTrend (Daily net value)
+    const netWorthMatch = text.match(/var Data_netWorthTrend = (\[.*?\]);/);
+    if (!netWorthMatch) {
+      throw new Error('Failed to parse history data');
+    }
+
+    const rawData = JSON.parse(netWorthMatch[1]);
+    // rawData is an array of objects: { x: timestamp, y: value, equityReturn: percent, unitMoney: "" }
+    const historyData: FundHistoryItem[] = rawData.map((item: any) => {
+      const date = new Date(item.x).toISOString().split('T')[0];
+      return {
+        date,
+        value: item.y,
+        changePercent: item.equityReturn || 0,
+      };
+    });
+
+    // Also get fund name from the same file if possible
+    const nameMatch = text.match(/var fName = "(.*?)";/);
+    const name = nameMatch ? nameMatch[1] : '';
+
+    return {
+      code: fundCode,
+      name,
+      data: historyData,
+    };
+  } catch (error) {
+    console.error(`Failed to fetch fund history ${fundCode}:`, error);
     throw error;
   }
 }
